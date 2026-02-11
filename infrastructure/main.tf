@@ -14,6 +14,7 @@ resource "google_compute_subnetwork" "subnet" {
   region        = "us-central1"
   network       = google_compute_network.vpc_network.id
 }
+#Testiing some changes
 
 resource "google_container_cluster" "primary" {
   name     = "gke-cluster"
