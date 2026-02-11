@@ -1,0 +1,27 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+
+# Python of FastAPI
+__pycache__/
+*.pyc
+venv/
+.venv/
+.env
+
+# MacOS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+
+# Secrets
+infrastructure/sa-key.json
+
+# Flutter/Dart (Standard flutter ignore should handle most, but adding for safety)
+build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
