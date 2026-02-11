@@ -1,0 +1,71 @@
+name: Manual Terraform
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to run against'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+        - dev
+        - qa
+        - prod
+      command:
+        description: 'Terraform Command'
+        required: true
+        default: 'plan'
+        type: choice
+        options:
+        - plan
+        - apply
+        - destroy
+
+env:
+  PROJECT_ID: rd-antigravity-dev1
+  REGION: us-central1
+  TF_VERSION: '1.5.7'
+
+jobs:
+  terraform:
+    name: Terraform
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: ./infrastructure
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v2
+      with:
+        project_id: ${{ env.PROJECT_ID }}
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: ${{ env.TF_VERSION }}
+
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Plan
+      if: github.event.inputs.command == 'plan'
+      run: terraform plan -input=false
+
+    - name: Terraform Apply
+      if: github.event.inputs.command == 'apply'
+      run: terraform apply -auto-approve -input=false
+
+    - name: Terraform Destroy
+      if: github.event.inputs.command == 'destroy'
+      run: terraform destroy -auto-approve -input=false

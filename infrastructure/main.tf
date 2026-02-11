@@ -4,6 +4,13 @@ provider "google" {
   zone    = "us-central1-a"
 }
 
+terraform {
+  backend "gcs" {
+    bucket  = "rd-antigravity-dev1-tfstate"
+    prefix  = "terraform/state"
+  }
+}
+
 resource "google_compute_network" "vpc_network" {
   name = "gke-vpc"
 }
